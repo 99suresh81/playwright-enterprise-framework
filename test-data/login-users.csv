@@ -1,0 +1,5 @@
+username,password,expectedResult,tags
+valid_user@example.com,CorrectPass123!,success,smoke|regression
+locked_user@example.com,CorrectPass123!,account_locked,regression
+valid_user@example.com,WrongPass!,invalid_credentials,smoke|regression|negative
+,CorrectPass123!,username_required,negative
