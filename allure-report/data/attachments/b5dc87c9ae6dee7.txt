@@ -1,0 +1,2 @@
+[2026-07-18T12:06:27.568Z] [INFO] Starting test: authenticate {"env":"local"}
+[2026-07-18T12:06:28.165Z] [INFO] Navigating to /login

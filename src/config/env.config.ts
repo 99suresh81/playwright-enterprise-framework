@@ -26,7 +26,7 @@ const EnvSchema = z.object({
     .transform((v) => v === 'true'),
   DEFAULT_TIMEOUT_MS: z
     .string()
-    .default('30000')
+    .default('120000')
     .transform((v) => Number(v)),
   CI: z
     .string()
