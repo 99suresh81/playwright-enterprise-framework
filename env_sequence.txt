@@ -11,3 +11,14 @@
    - if valid → exports the validated `env` object
 7. Back in `playwright.config.ts`, `defineConfig({...})` now uses that validated `env` object (e.g. `env.BASE_URL`, `env.DEFAULT_TIMEOUT_MS`)
 8. Only now does Playwright actually start discovering and running test files
+
+
+Called from: playwright.config.ts — this exact line:
+typescriptexport default defineConfig({...})
+Exact position in the sequence:
+
+Before it: step 5–6 already happened — import { env } from './src/config/env.config' at the top of playwright.config.ts executed first, which ran env.config.ts top-to-bottom (dotenv loads + zod validation), so env is a fully validated object before defineConfig(...) is even reached.
+defineConfig({...}) itself runs next — as plain top-to-bottom code in playwright.config.ts, right after the imports. It just wraps the config object you give it (using env.BASE_URL etc., which is already available) and returns it as this file's default export.
+After it: the Playwright CLI (which triggered this whole import in step 4) reads that default export and uses it to configure the test run — discover testDir, set up projects, apply reporter, etc. Then it proceeds to run tests (step 8).
+
+So: it's step 6.5 — after env.config.ts finishes validating, still inside playwright.config.ts, before the CLI moves on to actually running tests.
