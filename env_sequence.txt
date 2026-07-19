@@ -1,0 +1,13 @@
+1. `npm run test:local` → npm resolves the script → `cross-env ENV=local node scripts/run-tests.js`
+2. `cross-env` sets `process.env.ENV = 'local'` for the child process
+3. `run-tests.js` runs, spawns `npx playwright test`
+4. Playwright CLI starts, and its very first step is to import `playwright.config.ts`
+5. `playwright.config.ts` has `import { env } from './src/config/env.config'` at the top → this triggers `env.config.ts` to execute
+6. Inside `env.config.ts`, top-level code runs in order:
+   - `loadDotenv({ path: '.env' })` → loads base `.env`
+   - `loadDotenv({ path: '.env.local', override: true })` → loads/overrides with `.env.local`
+   - `EnvSchema.safeParse(process.env)` → **zod validation happens here**
+   - if invalid → throws, everything stops
+   - if valid → exports the validated `env` object
+7. Back in `playwright.config.ts`, `defineConfig({...})` now uses that validated `env` object (e.g. `env.BASE_URL`, `env.DEFAULT_TIMEOUT_MS`)
+8. Only now does Playwright actually start discovering and running test files
