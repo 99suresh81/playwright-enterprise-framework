@@ -1,5 +1,5 @@
 import { test, expect } from '../src/fixtures/base.fixture';
-import { readCsv, readCsvByTag } from '../src/utils/data-provider.util';
+import { readCsv } from '../src/utils/data-provider.util';
 
 /**
  * The shape below is declared INLINE, at the point of use — this is the
@@ -11,7 +11,7 @@ type LoginRow = {
   username: string;
   password: string;
   expectedResult: 'success' | 'account_locked' | 'invalid_credentials' | 'username_required';
-  tags: string;
+  tags: string; // pipe-separated, e.g. "smoke|regression"
 };
 
 test.describe('Login', () => {
@@ -22,7 +22,16 @@ test.describe('Login', () => {
   });
 
   for (const row of rows) {
-    test(`login with "${row.username || '(empty)'}" -> ${row.expectedResult}`, async ({
+    // Tags from the CSV become @tag markers in the title, so Playwright's
+    // built-in `grep` (used via the smoke/regression projects in
+    // playwright.config.ts) can filter this ONE test list — no separate
+    // loop or second describe block needed per suite.
+    const tagLabels = row.tags
+      .split('|')
+      .map((t) => `@${t.trim()}`)
+      .join(' ');
+
+    test(`${tagLabels} login "${row.username || '(empty)'}" -> ${row.expectedResult}`, async ({
       loginPage,
     }) => {
       await loginPage.login(row.username, row.password);
@@ -33,19 +42,6 @@ test.describe('Login', () => {
         const errorText = await loginPage.getErrorText();
         expect(errorText).toBeTruthy();
       }
-    });
-  }
-});
-
-test.describe('Login - smoke only', () => {
-  // Same CSV, filtered by tag column — no second file needed for a
-  // smaller smoke suite.
-  const smokeRows = readCsvByTag<LoginRow>('login-users.csv', 'smoke');
-
-  for (const row of smokeRows) {
-    test(`@smoke login "${row.username}" -> ${row.expectedResult}`, async ({ loginPage }) => {
-      await loginPage.login(row.username, row.password);
-      expect(row.expectedResult).toBeTruthy();
     });
   }
 });

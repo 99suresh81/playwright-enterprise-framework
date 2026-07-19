@@ -52,5 +52,23 @@ export default defineConfig({
       },
       dependencies: ['setup'],
     },
+    {
+      name: 'smoke',
+      grep: /@smoke/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'regression',
+      grep: /@regression/,
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
+    },
   ],
 });
