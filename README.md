@@ -89,3 +89,8 @@ npm run test:smoke
 
 No new interface file. No new loader. No new page object unless the UI
 under test is genuinely new.
+
+## To run single test
+npm run test:local -- tests/login.spec.ts
+
+
