@@ -2,11 +2,17 @@ node_modules/
 dist/
 test-results/
 playwright-report/
+playwright-report-*/
 playwright-report-api/
+playwright-report-api-*/
 playwright/.auth/
 allure-results/
+allure-results-*/
 allure-results-api/
+allure-results-api-*/
 allure-report/
+allure-report-*/
 allure-report-api/
+allure-report-api-*/
 blob-report/
 *.log

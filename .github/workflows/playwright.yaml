@@ -36,12 +36,14 @@ jobs:
       - name: Run UI tests
         run: npm test
 
+      # Report folders include a timestamp in CI (see report-paths.util.ts),
+      # so upload via wildcard rather than a fixed folder name.
       - name: Upload HTML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
-          path: playwright-report/
+          path: playwright-report-*/
           retention-days: 14
 
       - name: Upload JUnit results
@@ -49,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: junit-results
-          path: test-results/junit.xml
+          path: test-results/junit-*.xml
           retention-days: 14
 
       - name: Upload Allure report
@@ -57,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
-          path: allure-report/
+          path: allure-report-*/
           retention-days: 14
 
   # Separate job on purpose: API tests don't need browsers installed and
@@ -91,7 +93,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-api
-          path: playwright-report-api/
+          path: playwright-report-api-*/
           retention-days: 14
 
       - name: Upload JUnit results (API)
@@ -99,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: junit-results-api
-          path: test-results/junit-api.xml
+          path: test-results/junit-api-*.xml
           retention-days: 14
 
       - name: Upload Allure report (API)
@@ -107,5 +109,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report-api
-          path: allure-report-api/
+          path: allure-report-api-*/
           retention-days: 14

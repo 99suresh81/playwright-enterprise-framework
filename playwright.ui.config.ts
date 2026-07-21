@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 import { env } from './src/config/env.config';
+import { reportSuffix } from './src/utils/report-paths.util';
+
+const suffix = reportSuffix(!!env.CI);
 
 export default defineConfig({
   testDir: './tests',
@@ -11,17 +14,23 @@ export default defineConfig({
 
   reporter: env.CI
     ? [
-        ['html', { open: 'never' }],
-        ['junit', { outputFile: 'test-results/junit.xml' }],
+        ['html', { open: 'never', outputFolder: `playwright-report${suffix}` }],
+        ['junit', { outputFile: `test-results/junit${suffix}.xml` }],
         ['github'],
-        ['allure-playwright', { resultsDir: 'allure-results' }],
-        ['./src/reporters/allure-generate.reporter.ts', { resultsDir: 'allure-results', outputDir: 'allure-report' }],
+        ['allure-playwright', { resultsDir: `allure-results${suffix}` }],
+        [
+          './src/reporters/allure-generate.reporter.ts',
+          { resultsDir: `allure-results${suffix}`, outputDir: `allure-report${suffix}` },
+        ],
       ]
     : [
-        ['html', { open: 'never' }],
+        ['html', { open: 'never', outputFolder: 'playwright-report' }],
         ['list'],
         ['allure-playwright', { resultsDir: 'allure-results' }],
-        ['./src/reporters/allure-generate.reporter.ts', { resultsDir: 'allure-results', outputDir: 'allure-report' }],
+        [
+          './src/reporters/allure-generate.reporter.ts',
+          { resultsDir: 'allure-results', outputDir: 'allure-report' },
+        ],
       ],
 
   use: {

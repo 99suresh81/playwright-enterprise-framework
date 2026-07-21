@@ -29,7 +29,10 @@ handful.
   in test titles; `smoke`/`regression` Playwright projects filter via
   `grep`, so one data file serves multiple suites.
 - **Reporting** — HTML (quick local look), JUnit (CI integration), and
-  Allure (richer dashboards/history) for both UI and API suites.
+  Allure (richer dashboards/history) for both UI and API suites. Report
+  folders/files use fixed names locally (overwrite each run) and a
+  timestamp suffix in CI (`report-paths.util.ts`), so pipeline runs never
+  clobber a previous run's artifacts before upload.
 - **CI/CD pipeline** — GitHub Actions with two parallel jobs (`ui-tests`,
   `api-tests`): typecheck → run → upload HTML/JUnit/Allure artifacts.
 - **Structured logging** — lightweight, timestamped, CI-greppable.

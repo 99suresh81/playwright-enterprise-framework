@@ -1,9 +1,12 @@
 import { defineConfig } from '@playwright/test';
 import { env } from './src/config/env.config';
+import { reportSuffix } from './src/utils/report-paths.util';
 
 if (!env.API_BASE_URL) {
   throw new Error('API_BASE_URL is required to run the API suite. Set it in your .env file.');
 }
+
+const suffix = reportSuffix(!!env.CI);
 
 /**
  * Separate from playwright.config.ts on purpose: API tests need no
@@ -21,17 +24,23 @@ export default defineConfig({
 
   reporter: env.CI
     ? [
-        ['html', { open: 'never', outputFolder: 'playwright-report-api' }],
-        ['junit', { outputFile: 'test-results/junit-api.xml' }],
+        ['html', { open: 'never', outputFolder: `playwright-report-api${suffix}` }],
+        ['junit', { outputFile: `test-results/junit-api${suffix}.xml` }],
         ['github'],
-        ['allure-playwright', { resultsDir: 'allure-results-api' }],
-        ['./src/reporters/allure-generate.reporter.ts', { resultsDir: 'allure-results-api', outputDir: 'allure-report-api' }],
+        ['allure-playwright', { resultsDir: `allure-results-api${suffix}` }],
+        [
+          './src/reporters/allure-generate.reporter.ts',
+          { resultsDir: `allure-results-api${suffix}`, outputDir: `allure-report-api${suffix}` },
+        ],
       ]
     : [
         ['html', { open: 'never', outputFolder: 'playwright-report-api' }],
         ['list'],
         ['allure-playwright', { resultsDir: 'allure-results-api' }],
-        ['./src/reporters/allure-generate.reporter.ts', { resultsDir: 'allure-results-api', outputDir: 'allure-report-api' }],
+        [
+          './src/reporters/allure-generate.reporter.ts',
+          { resultsDir: 'allure-results-api', outputDir: 'allure-report-api' },
+        ],
       ],
 
   use: {
