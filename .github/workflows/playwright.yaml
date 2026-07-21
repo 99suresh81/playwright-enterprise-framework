@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  ui-tests:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     env:
@@ -33,7 +33,7 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
-      - name: Run tests
+      - name: Run UI tests
         run: npm test
 
       - name: Upload HTML report
@@ -52,14 +52,64 @@ jobs:
           path: test-results/junit.xml
           retention-days: 14
 
-      - name: Generate Allure report
-        if: always()
-        run: npm run allure:generate
-
       - name: Upload Allure report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report/
+          retention-days: 14
+
+  # Separate job on purpose: API tests don't need browsers installed and
+  # can run in parallel with the UI job, independently of it - one suite
+  # failing doesn't block the other from reporting results.
+  api-tests:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      ENV: qa
+      BASE_URL: ${{ secrets.QA_BASE_URL }}
+      API_BASE_URL: ${{ secrets.QA_API_BASE_URL }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run API tests
+        run: npm run test:api
+
+      - name: Generate Allure report (API)
+        if: always()
+        run: npm run allure:generate:api
+
+      - name: Upload HTML report (API)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-api
+          path: playwright-report-api/
+          retention-days: 14
+
+      - name: Upload JUnit results (API)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-results-api
+          path: test-results/junit-api.xml
+          retention-days: 14
+
+      - name: Upload Allure report (API)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-api
+          path: allure-report-api/
           retention-days: 14

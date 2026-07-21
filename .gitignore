@@ -1,5 +1,12 @@
 node_modules/
-playwright-report/
-test-results/
-blob-report/
 dist/
+test-results/
+playwright-report/
+playwright-report-api/
+playwright/.auth/
+allure-results/
+allure-results-api/
+allure-report/
+allure-report-api/
+blob-report/
+*.log
