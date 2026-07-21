@@ -7,7 +7,7 @@
  *   upload (useful if multiple runs happen close together, or reports
  *   are ever collected from the same workspace before upload).
  *
- * Used by both playwright.config.ts and playwright.api.config.ts so the
+ * Used by both playwright.ui.config.ts and playwright.api.config.ts so the
  * naming rule stays in one place instead of being duplicated per config.
  */
 export function reportSuffix(isCI: boolean): string {

@@ -9,7 +9,7 @@ if (!env.API_BASE_URL) {
 const suffix = reportSuffix(!!env.CI);
 
 /**
- * Separate from playwright.config.ts on purpose: API tests need no
+ * Separate from playwright.ui.config.ts on purpose: API tests need no
  * browser, no devices, no storageState — running them through the UI
  * config would drag in irrelevant setup and slow CI for no benefit.
  * Shares env.config.ts, logger, and data-provider with the UI suite.

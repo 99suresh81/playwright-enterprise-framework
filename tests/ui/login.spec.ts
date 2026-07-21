@@ -17,14 +17,14 @@ type LoginRow = {
 test.describe('Login', () => {
   // Full data set, required columns checked generically (fails fast if
   // someone edits the CSV and drops a column).
-  const rows = readCsv<LoginRow>('login-users.csv', {
+  const rows = readCsv<LoginRow>('ui/login-users.csv', {
     requiredColumns: ['username', 'password', 'expectedResult'],
   });
 
   for (const row of rows) {
     // Tags from the CSV become @tag markers in the title, so Playwright's
     // built-in `grep` (used via the smoke/regression projects in
-    // playwright.config.ts) can filter this ONE test list — no separate
+    // playwright.ui.config.ts) can filter this ONE test list — no separate
     // loop or second describe block needed per suite.
     const tagLabels = row.tags
       .split('|')

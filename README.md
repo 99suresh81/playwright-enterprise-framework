@@ -80,8 +80,9 @@ playwright-enterprise-framework/
 │       ├── data-provider.util.ts      # <-- the generic CSV/JSON loader (UI + API)
 │       └── logger.util.ts
 ├── tests/
-│   ├── auth.setup.ts                  # log in once, reuse storage state
-│   ├── login.spec.ts                  # UI: shows the inline-type + tag pattern
+│   ├── ui/
+│   │   ├── auth.setup.ts              # log in once, reuse storage state
+│   │   └── login.spec.ts              # UI: shows the inline-type + tag pattern
 │   └── api/
 │       └── users.api.spec.ts          # API: same inline-type pattern
 ├── test-data/
@@ -89,7 +90,7 @@ playwright-enterprise-framework/
 │   └── api/
 │       └── create-user.json
 ├── .env
-├── playwright.config.ts               # UI config (browsers, storageState, smoke/regression projects)
+├── playwright.ui.config.ts            # UI config (browsers, storageState, smoke/regression projects)
 ├── playwright.api.config.ts           # API config (no browser, own reporters)
 └── package.json
 ```
@@ -107,7 +108,7 @@ npm run install:browsers
 npm run test:local          # runs UI suite against .env.local, auto-generates Allure report after
 npm run test:smoke          # smoke-tagged tests only (grep: /@smoke/)
 npm run test:regression     # regression-tagged tests only
-npm run test:local -- tests/login.spec.ts   # single file
+npm run test:local -- tests/ui/login.spec.ts   # single file
 ```
 
 ### API tests

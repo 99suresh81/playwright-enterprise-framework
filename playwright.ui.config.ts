@@ -5,7 +5,7 @@ import { reportSuffix } from './src/utils/report-paths.util';
 const suffix = reportSuffix(!!env.CI);
 
 export default defineConfig({
-  testDir: './tests',
+  testDir: './tests/ui',
   timeout: env.DEFAULT_TIMEOUT_MS,
   fullyParallel: true,
   forbidOnly: !!env.CI,
