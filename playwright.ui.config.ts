@@ -15,11 +15,13 @@ export default defineConfig({
         ['junit', { outputFile: 'test-results/junit.xml' }],
         ['github'],
         ['allure-playwright', { resultsDir: 'allure-results' }],
+        ['./src/reporters/allure-generate.reporter.ts', { resultsDir: 'allure-results', outputDir: 'allure-report' }],
       ]
     : [
         ['html', { open: 'never' }],
         ['list'],
         ['allure-playwright', { resultsDir: 'allure-results' }],
+        ['./src/reporters/allure-generate.reporter.ts', { resultsDir: 'allure-results', outputDir: 'allure-report' }],
       ],
 
   use: {

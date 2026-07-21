@@ -86,10 +86,6 @@ jobs:
       - name: Run API tests
         run: npm run test:api
 
-      - name: Generate Allure report (API)
-        if: always()
-        run: npm run allure:generate:api
-
       - name: Upload HTML report (API)
         if: always()
         uses: actions/upload-artifact@v4

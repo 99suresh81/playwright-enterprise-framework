@@ -25,11 +25,13 @@ export default defineConfig({
         ['junit', { outputFile: 'test-results/junit-api.xml' }],
         ['github'],
         ['allure-playwright', { resultsDir: 'allure-results-api' }],
+        ['./src/reporters/allure-generate.reporter.ts', { resultsDir: 'allure-results-api', outputDir: 'allure-report-api' }],
       ]
     : [
         ['html', { open: 'never', outputFolder: 'playwright-report-api' }],
         ['list'],
         ['allure-playwright', { resultsDir: 'allure-results-api' }],
+        ['./src/reporters/allure-generate.reporter.ts', { resultsDir: 'allure-results-api', outputDir: 'allure-report-api' }],
       ],
 
   use: {

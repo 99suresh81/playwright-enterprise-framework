@@ -64,13 +64,15 @@ playwright-enterprise-framework/
 ├── src/
 │   ├── config/env.config.ts           # validated env, one file
 │   ├── fixtures/
-│   │   ├── base.fixture.ts            # UI: extend Playwright test ONCE here
+│   │   ├── base.ui.fixture.ts         # UI: extend Playwright test ONCE here
 │   │   └── api.fixture.ts             # API: extend Playwright test ONCE here
 │   ├── api/
 │   │   └── api-client.util.ts         # thin wrapper: logging + status asserts
 │   ├── pages/
 │   │   ├── base.page.ts
 │   │   └── login.page.ts
+│   ├── reporters/
+│   │   └── allure-generate.reporter.ts # onEnd() hook: auto-generates Allure HTML, UI + API
 │   └── utils/
 │       ├── data-provider.util.ts      # <-- the generic CSV/JSON loader (UI + API)
 │       └── logger.util.ts
@@ -83,8 +85,6 @@ playwright-enterprise-framework/
 │   ├── login-users.csv
 │   └── api/
 │       └── create-user.json
-├── scripts/
-│   └── run-tests.js                   # UI: runs tests, always generates Allure after
 ├── .env
 ├── playwright.config.ts               # UI config (browsers, storageState, smoke/regression projects)
 ├── playwright.api.config.ts           # API config (no browser, own reporters)
@@ -111,8 +111,9 @@ npm run test:local -- tests/login.spec.ts   # single file
 
 ```bash
 npm run test:api:local
-npm run allure:generate:api   # Allure isn't auto-generated for API yet — run manually
 ```
+
+Allure report generates automatically after the run (same `onEnd()` reporter as UI) — no manual step needed.
 
 ### Reports
 

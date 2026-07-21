@@ -1,5 +1,5 @@
-import { test, expect } from '../src/fixtures/base.fixture';
-import { readCsv } from '../src/utils/data-provider.util';
+import { test, expect } from '../../src/fixtures/base.ui.fixture';
+import { readCsv } from '../../src/utils/data-provider.util';
 
 /**
  * The shape below is declared INLINE, at the point of use — this is the

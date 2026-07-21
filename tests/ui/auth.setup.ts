@@ -1,4 +1,4 @@
-import { test as setup } from '../src/fixtures/base.fixture';
+import { test as setup } from '../src/fixtures/base.ui.fixture';
 import { env } from '../src/config/env.config';
 
 const STORAGE_STATE_PATH = 'playwright/.auth/user.json';
