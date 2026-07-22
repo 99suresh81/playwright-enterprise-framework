@@ -26,4 +26,9 @@ export abstract class BasePage {
   async getTitle(): Promise<string> {
     return this.page.title();
   }
+
+  /** Exposes the underlying Page for assertions in specs (e.g. toHaveURL) without bracket-notation access hacks. */
+  get currentPage(): Page {
+    return this.page;
+  }
 }

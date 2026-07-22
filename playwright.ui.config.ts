@@ -1,18 +1,15 @@
 import { defineConfig, devices } from '@playwright/test';
-import { env } from './src/config/env.config';
+import { uiEnv } from './src/config/env.config';
 import { reportSuffix } from './src/utils/report-paths.util';
-
-const suffix = reportSuffix(!!env.CI);
-
+const suffix = reportSuffix(!!uiEnv.CI);
 export default defineConfig({
   testDir: './tests/ui',
-  timeout: env.DEFAULT_TIMEOUT_MS,
+  timeout: uiEnv.DEFAULT_TIMEOUT_MS,
   fullyParallel: true,
-  forbidOnly: !!env.CI,
-  retries: env.CI ? 2 : 0,
-  workers: env.CI ? 4 : undefined,
-
-  reporter: env.CI
+  forbidOnly: !!uiEnv.CI,
+  retries: uiEnv.CI ? 2 : 0,
+  workers: uiEnv.CI ? 4 : undefined,
+  reporter: uiEnv.CI
     ? [
         ['html', { open: 'never', outputFolder: `playwright-report${suffix}` }],
         ['junit', { outputFile: `test-results/junit${suffix}.xml` }],
@@ -32,21 +29,18 @@ export default defineConfig({
           { resultsDir: 'allure-results', outputDir: 'allure-report' },
         ],
       ],
-
   use: {
-    baseURL: env.BASE_URL,
-    headless: env.HEADLESS,
+    baseURL: uiEnv.BASE_URL,
+    headless: uiEnv.HEADLESS,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: 10000,
     navigationTimeout: 15000,
   },
-
   projects: [
     // Runs auth.setup.ts once, saves logged-in state for every other project.
     { name: 'setup', testMatch: /auth\.setup\.ts/ },
-
     {
       name: 'chromium',
       use: {

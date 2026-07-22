@@ -26,14 +26,14 @@ const EnvSchema = z.object({
     .transform((v) => v === 'true'),
   DEFAULT_TIMEOUT_MS: z
     .string()
-    .default('120000')
+    .default('30000')
     .transform((v) => Number(v)),
   CI: z
     .string()
     .optional()
     .transform((v) => v === 'true'),
-  USERNAME: z.string().min(1, 'USERNAME is required for auth setup'),
-  PASSWORD: z.string().min(1, 'PASSWORD is required for auth setup'),
+  USERNAME: z.string().min(1).optional(),
+  PASSWORD: z.string().min(1).optional(),
 });
 
 const parsed = EnvSchema.safeParse(process.env);
@@ -43,5 +43,7 @@ if (!parsed.success) {
   console.error('❌ Invalid environment configuration:\n', parsed.error.flatten().fieldErrors);
   throw new Error('Environment validation failed. Check your .env file.');
 }
+
 export const env = parsed.data;
+
 export type Env = typeof env;

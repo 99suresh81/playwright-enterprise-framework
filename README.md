@@ -104,12 +104,24 @@ npm run install:browsers
 
 ### UI tests
 
+Before running, copy `.env.local.example` → `.env.local` and fill in real
+`USERNAME`/`PASSWORD` — these are required by `auth.setup.ts` and are
+deliberately not in the committed `.env`.
+
 ```bash
-npm run test:local          # runs UI suite against .env.local, auto-generates Allure report after
-npm run test:smoke          # smoke-tagged tests only (grep: /@smoke/)
-npm run test:regression     # regression-tagged tests only
+npm run test:local          # chromium + firefox, auto-generates Allure report after
+npm run test:smoke          # smoke-tagged tests only (grep: /@smoke/), not run by default
+npm run test:regression     # regression-tagged tests only, not run by default
 npm run test:local -- tests/ui/login.spec.ts   # single file
 ```
+
+`test`/`test:local`/`test:qa`/`test:staging` explicitly target
+`--project=chromium --project=firefox`. This is intentional: the `smoke`
+and `regression` projects filter by tag via `grep`, and without an
+explicit `--project` flag Playwright runs *every* project in the config —
+so smoke-tagged tests would otherwise execute redundantly (once in
+chromium, once in firefox, once in the smoke project itself) on every
+default run.
 
 ### API tests
 
@@ -117,7 +129,7 @@ npm run test:local -- tests/ui/login.spec.ts   # single file
 npm run test:api:local
 ```
 
-Allure report generates automatically after the run (same `onEnd()` reporter as UI) — no manual step needed.
+Allure report generates automatically after the run (same `onEnd()` reporter as UI) — no manual step needed. The API suite does not require `USERNAME`/`PASSWORD` — it's decoupled from UI auth.
 
 ### Reports
 
@@ -134,9 +146,16 @@ npm run allure:open:api       # open API Allure report
 environments by adding `test:<name>` scripts the same way, plus a matching
 `.env.<name>` file.
 
-Credentials (`USERNAME`, `PASSWORD`) belong in `.env.local`/CI secrets,
-never in the shared `.env` — see `env.config.ts`'s schema for what's
-required.
+Credentials (`USERNAME`, `PASSWORD`) belong in `.env.local` (gitignored,
+copy from `.env.local.example`) locally, and CI secrets in the pipeline —
+never in the shared `.env`. They're optional at the schema level (so the
+API suite, which doesn't need them, isn't forced to provide them) but
+`auth.setup.ts` fails fast with a clear error if they're missing when the
+UI suite actually needs them.
+
+CI needs these secrets configured on the repo: `QA_BASE_URL`,
+`QA_USERNAME`, `QA_PASSWORD` (UI job), and `QA_API_BASE_URL` (API job,
+in addition to `QA_BASE_URL`).
 
 ## Adding a new UI data-driven suite
 

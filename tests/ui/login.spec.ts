@@ -37,7 +37,7 @@ test.describe('Login', () => {
       await loginPage.login(row.username, row.password);
 
       if (row.expectedResult === 'success') {
-        await expect(loginPage['page']).toHaveURL(/dashboard/);
+        await expect(loginPage.currentPage).toHaveURL(/dashboard/);
       } else {
         const errorText = await loginPage.getErrorText();
         expect(errorText).toBeTruthy();
