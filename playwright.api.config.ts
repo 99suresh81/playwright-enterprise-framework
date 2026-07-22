@@ -1,10 +1,10 @@
 import { defineConfig } from '@playwright/test';
-import { env } from './src/config/env.config';
+import { apiEnv } from './src/config/env.config';
 import { reportSuffix } from './src/utils/report-paths.util';
-if (!env.API_BASE_URL) {
+if (!apiEnv.API_BASE_URL) {
   throw new Error('API_BASE_URL is required to run the API suite. Set it in your .env file.');
 }
-const suffix = reportSuffix(!!env.CI);
+const suffix = reportSuffix(!!apiEnv.CI);
 /**
  * Separate from playwright.ui.config.ts on purpose: API tests need no
  * browser, no devices, no storageState — running them through the UI
@@ -13,12 +13,12 @@ const suffix = reportSuffix(!!env.CI);
  */
 export default defineConfig({
   testDir: './tests/api',
-  timeout: env.DEFAULT_TIMEOUT_MS,
+  timeout: apiEnv.DEFAULT_TIMEOUT_MS,
   fullyParallel: true,
-  forbidOnly: !!env.CI,
-  retries: env.CI ? 2 : 0,
-  workers: env.CI ? 4 : undefined,
-  reporter: env.CI
+  forbidOnly: !!apiEnv.CI,
+  retries: apiEnv.CI ? 2 : 0,
+  workers: apiEnv.CI ? 4 : undefined,
+  reporter: apiEnv.CI
     ? [
         ['html', { open: 'never', outputFolder: `playwright-report-api${suffix}` }],
         ['junit', { outputFile: `test-results/junit-api${suffix}.xml` }],
@@ -39,7 +39,7 @@ export default defineConfig({
         ],
       ],
   use: {
-    baseURL: env.API_BASE_URL,
+    baseURL: apiEnv.API_BASE_URL,
     // Content-Type is intentionally NOT forced here. Playwright already
     // sets the correct Content-Type per-request automatically: JSON when
     // you pass `data: <object>`, multipart boundaries when you pass

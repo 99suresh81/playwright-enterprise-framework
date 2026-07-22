@@ -1,11 +1,16 @@
 /**
  * Single source of environment truth.
  *
- * Split into a base schema (shared by every suite) and a UI-only
- * extension. playwright.api.config.ts imports `env` (base fields only);
- * playwright.ui.config.ts imports `uiEnv` (base + auth fields). This
- * keeps the API suite runnable without USERNAME/PASSWORD/BASE_URL ever
- * being set — it never reads them, so it shouldn't be blocked by them.
+ * Split into a base schema (shared by every suite) plus a per-suite
+ * extension for each: playwright.api.config.ts imports `apiEnv`,
+ * playwright.ui.config.ts imports `uiEnv`. Neither should import the
+ * shared `BaseEnvSchema` directly — each suite gets its own typed,
+ * validated object, even where (like `apiEnv` today) it currently adds
+ * no extra fields on top of the base. This keeps the API suite runnable
+ * without USERNAME/PASSWORD/BASE_URL ever being set, and gives the API
+ * suite a designated place to grow its own fields later (e.g. an auth
+ * token, a rate-limit setting) without those leaking into the UI schema
+ * or the UI's fields leaking into the API's.
  */
 import { config as loadDotenv } from 'dotenv';
 import { z } from 'zod';
@@ -48,6 +53,16 @@ const BaseEnvSchema = z.object({
     .transform((v) => v === 'true'),
 });
 
+/**
+ * API-only fields layered on top of the base. Empty today — the API
+ * suite currently needs nothing beyond API_BASE_URL/CI/DEFAULT_TIMEOUT_MS,
+ * which already live in BaseEnvSchema. Kept as an explicit `.extend({})`
+ * rather than reusing BaseEnvSchema directly so this is the obvious place
+ * to add API-specific fields later (e.g. API_AUTH_TOKEN, API_RATE_LIMIT_MS)
+ * without touching UiEnvSchema or BaseEnvSchema.
+ */
+const ApiEnvSchema = BaseEnvSchema.extend({});
+
 /** UI-only fields layered on top — browser + auth concerns. */
 const UiEnvSchema = BaseEnvSchema.extend({
   BASE_URL: z.string().url(),
@@ -69,9 +84,9 @@ function parseOrThrow<T>(schema: z.ZodType<T>, label: string): T {
   return parsed.data;
 }
 
-/** Base env — safe to import from ANY config, including API-only runs. */
-export const env = parseOrThrow(BaseEnvSchema, 'base');
-export type Env = typeof env;
+/** API env — only import this from API-specific code (playwright.api.config.ts, api fixtures, etc.). */
+export const apiEnv = parseOrThrow(ApiEnvSchema, 'API');
+export type ApiEnv = typeof apiEnv;
 
 /** UI env — only import this from UI-specific code (playwright.ui.config.ts, auth setup, etc.). */
 export const uiEnv = parseOrThrow(UiEnvSchema, 'UI');
