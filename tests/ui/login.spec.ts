@@ -1,4 +1,4 @@
-import { test, expect } from '../../src/fixtures/base.ui.fixture';
+import { test, expect } from '../../src/fixtures/ui.fixture';
 import { readCsv } from '../../src/utils/data-provider.util';
 
 /**

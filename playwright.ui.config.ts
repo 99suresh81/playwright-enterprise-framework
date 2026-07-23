@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import { uiEnv } from './src/config/env.config';
+import { uiEnv } from './src/config/ui-env.config';
 import { reportSuffix } from './src/utils/report-paths.util';
 const suffix = reportSuffix(!!uiEnv.CI);
 export default defineConfig({

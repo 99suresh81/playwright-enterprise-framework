@@ -6,7 +6,7 @@ type ApiFixtures = {
 };
 
 /**
- * Same pattern as base.ui.fixture.ts for UI — extend ONCE here, every API
+ * Same pattern as ui.fixture.ts for UI — extend ONCE here, every API
  * spec imports `test`/`expect` from this file instead of '@playwright/test'.
  * Uses Playwright's built-in `request` fixture (respects baseURL/headers
  * from playwright.api.config.ts) rather than creating a second context.

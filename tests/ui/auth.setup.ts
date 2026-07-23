@@ -1,9 +1,9 @@
-import { test as setup } from '../../src/fixtures/base.ui.fixture';
-import { env } from '../../src/config/env.config';
+import { test as setup } from '../../src/fixtures/ui.fixture';
+import { uiEnv } from '../../src/config/ui-env.config';
 
 const STORAGE_STATE_PATH = 'playwright/.auth/user.json';
 
-if (!env.USERNAME || !env.PASSWORD) {
+if (!uiEnv.USERNAME || !uiEnv.PASSWORD) {
   throw new Error(
     'USERNAME and PASSWORD are required to run the UI suite (used by auth.setup.ts). ' +
       'Set them in .env.local — see .env.local.example.'
@@ -12,8 +12,8 @@ if (!env.USERNAME || !env.PASSWORD) {
 
 // Narrowed to `string` here (not string | undefined) so the values below
 // stay type-safe inside the closure without a non-null assertion.
-const username = env.USERNAME;
-const password = env.PASSWORD;
+const username = uiEnv.USERNAME;
+const password = uiEnv.PASSWORD;
 
 /**
  * Runs once before the real test suite (see playwright.ui.config.ts

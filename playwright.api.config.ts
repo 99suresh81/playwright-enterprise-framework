@@ -1,5 +1,5 @@
 import { defineConfig } from '@playwright/test';
-import { apiEnv } from './src/config/env.config';
+import { apiEnv } from './src/config/api-env.config';
 import { reportSuffix } from './src/utils/report-paths.util';
 if (!apiEnv.API_BASE_URL) {
   throw new Error('API_BASE_URL is required to run the API suite. Set it in your .env file.');
@@ -9,7 +9,7 @@ const suffix = reportSuffix(!!apiEnv.CI);
  * Separate from playwright.ui.config.ts on purpose: API tests need no
  * browser, no devices, no storageState — running them through the UI
  * config would drag in irrelevant setup and slow CI for no benefit.
- * Shares env.config.ts, logger, and data-provider with the UI suite.
+ * Shares env-loader.util.ts, logger, and data-provider with the UI suite.
  */
 export default defineConfig({
   testDir: './tests/api',

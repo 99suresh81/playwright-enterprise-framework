@@ -1,6 +1,6 @@
 import { test as base } from '@playwright/test';
 import { LoginPage } from '../pages/login.page';
-import { env } from '../config/env.config';
+import { uiEnv } from '../config/ui-env.config';
 import { logger } from '../utils/logger.util';
 
 type Fixtures = {
@@ -19,7 +19,7 @@ export const test = base.extend<Fixtures>({
 });
 
 test.beforeEach(async ({}, testInfo) => {
-  logger.info(`Starting test: ${testInfo.title}`, { env: env.ENV });
+  logger.info(`Starting test: ${testInfo.title}`, { env: uiEnv.ENV });
 });
 
 export { expect } from '@playwright/test';
