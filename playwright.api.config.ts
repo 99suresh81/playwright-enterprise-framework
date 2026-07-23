@@ -1,9 +1,7 @@
 import { defineConfig } from '@playwright/test';
 import { apiEnv } from './src/config/api-env.config';
 import { reportSuffix } from './src/utils/report-paths.util';
-if (!apiEnv.API_BASE_URL) {
-  throw new Error('API_BASE_URL is required to run the API suite. Set it in your .env file.');
-}
+
 const suffix = reportSuffix(!!apiEnv.CI);
 /**
  * Separate from playwright.ui.config.ts on purpose: API tests need no
